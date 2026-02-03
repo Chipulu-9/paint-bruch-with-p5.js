@@ -10,17 +10,17 @@ let currentColor;
 
 function setup() {
   createCanvas(400, 400);
-  currentColor = color(0); // default black
+  currentColor = color(0); 
 }
 
 function draw() {
   background(220);
 
-  // draw cursor
+  
   fill(currentColor);
   ellipse(mouseX, mouseY, 40, 40);
 
-  // draw color palette
+  
   for (let i = 0; i < colors.length; i++) {
     fill(colors[i]);
     ellipse(50 + i * 60, 350, 40, 40);
@@ -40,3 +40,4 @@ function mousePressed() {
 
   }
 }
+
