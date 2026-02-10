@@ -17,6 +17,9 @@ function setup() {
   brushSizeSlider = createSlider(2, 40, 10);
   brushSizeSlider.position(300, height - 45);
   brushSizeSlider.style("width", "180px");
+
+  // Run test ONCE
+  runEraserTest();
 }
 
 function draw() {
@@ -27,9 +30,36 @@ function draw() {
   }
 
   drawBottomToolbar();
- 
 }
 
+/* =========================
+   SIMPLE TEST (ERASER)
+========================= */
+function runEraserTest() {
+  function assert(condition, message) {
+    console.log(condition ? "✅ " + message : "❌ " + message);
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(value, max));
+  }
+
+  // Reset state
+  isEraserActive = false;
+  assert(isEraserActive === false, "Eraser starts OFF");
+
+  // Simulate eraser click
+  mouseX = clamp(width - 60, width - 100, width - 20);
+  mouseY = clamp(height - 70, height - 85, height - 55);
+
+  mousePressed();
+
+  assert(isEraserActive === true, "Eraser activates when clicked");
+}
+
+/* =========================
+   DRAWING CLASSES & UI
+========================= */
 class StrokeSegment {
   constructor(x, y, px, py, strokeColor, strokeWeightValue) {
     this.x = x;
@@ -55,13 +85,13 @@ function drawBottomToolbar() {
   // Color palette
   for (let i = 0; i < availableColors.length; i++) {
     let x = 60 + i * 60;
-    let y = height - bottomToolbarHeight / 2; //half of 100
+    let y = height - bottomToolbarHeight / 2;
 
-    fill(availableColors[i]); 
+    fill(availableColors[i]);
     ellipse(x, y, 30);
 
     if (availableColors[i] === activeStrokeColor && !isEraserActive) {
-      noFill(); //no inside color
+      noFill();
       stroke(0);
       strokeWeight(2);
       ellipse(x, y, 40);
@@ -74,7 +104,7 @@ function drawBottomToolbar() {
   textAlign(LEFT, CENTER);
   text("Brush Size", 310, height - 75);
 
-  // Redo (left of Eraser)
+  // Redo
   fill(200);
   rect(width - 190, height - 85, 80, 30, 6);
   fill(0);
@@ -94,6 +124,9 @@ function drawBottomToolbar() {
   text("Clear", width - 60, height - 30);
 }
 
+/* =========================
+   INTERACTION
+========================= */
 function mouseDragged() {
   if (mouseY < height - bottomToolbarHeight) {
     let drawColor = isEraserActive
@@ -111,7 +144,6 @@ function mouseDragged() {
       )
     );
 
-    // New drawing clears redo history
     undoneSegments = [];
   }
 }
@@ -130,7 +162,7 @@ function mousePressed() {
       }
     }
 
-    // Redo — restore EVERYTHING
+    // Redo
     if (
       mouseX > width - 190 && mouseX < width - 110 &&
       mouseY > height - 85 && mouseY < height - 55
@@ -149,7 +181,7 @@ function mousePressed() {
       isEraserActive = true;
     }
 
-    // Clear (save all strokes for redo)
+    // Clear
     if (
       mouseX > width - 100 && mouseX < width - 20 &&
       mouseY > height - 45 && mouseY < height - 15
@@ -162,7 +194,6 @@ function mousePressed() {
 }
 
 function keyPressed() {
-  // Undo (still one step at a time)
   if ((key === "z" || key === "Z") && strokeSegments.length > 0) {
     undoneSegments.push(strokeSegments.pop());
   }
