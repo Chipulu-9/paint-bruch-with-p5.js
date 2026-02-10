@@ -32,9 +32,7 @@ function draw() {
   drawBottomToolbar();
 }
 
-/* =========================
-   SIMPLE TEST (ERASER)
-========================= */
+// SIMPLE TEST (ERASER)
 function runEraserTest() {
   function assert(condition, message) {
     console.log(condition ? "✅ " + message : "❌ " + message);
@@ -57,9 +55,7 @@ function runEraserTest() {
   assert(isEraserActive === true, "Eraser activates when clicked");
 }
 
-/* =========================
-   DRAWING CLASSES & UI
-========================= */
+// DRAWING CLASSES & UI 
 class StrokeSegment {
   constructor(x, y, px, py, strokeColor, strokeWeightValue) {
     this.x = x;
@@ -124,9 +120,7 @@ function drawBottomToolbar() {
   text("Clear", width - 60, height - 30);
 }
 
-/* =========================
-   INTERACTION
-========================= */
+// INTERACTION 
 function mouseDragged() {
   if (mouseY < height - bottomToolbarHeight) {
     let drawColor = isEraserActive
@@ -198,3 +192,4 @@ function keyPressed() {
     undoneSegments.push(strokeSegments.pop());
   }
 }
+
